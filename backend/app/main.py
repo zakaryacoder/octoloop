@@ -28,6 +28,13 @@ app = FastAPI(
 
 # ---- CORS: explicit origins; wildcard ONLY behind dev flag ----
 cors_origins = list(settings.cors_origins_list)
+
+# Allow the deployed Vercel frontend
+vercel_origin = "https://octoloop-rho.vercel.app"
+
+if vercel_origin not in cors_origins:
+    cors_origins.append(vercel_origin)
+
 if settings.ALLOW_CORS_WILDCARD:
     cors_origins = ["*"]
 app.add_middleware(
