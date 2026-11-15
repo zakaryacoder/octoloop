@@ -1,0 +1,113 @@
+from enum import StrEnum
+
+
+class Role(StrEnum):
+    admin = "admin"
+    clinician = "clinician"
+    nurse = "nurse"
+    coordinator = "coordinator"
+    viewer = "viewer"
+    patient = "patient"  # V2: patient portal self-service role
+
+
+class ScreeningType(StrEnum):
+    BREAST = "BREAST"
+    CERVICAL = "CERVICAL"
+    COLORECTAL = "COLORECTAL"
+    DIABETES = "DIABETES"
+    HYPERTENSION = "HYPERTENSION"
+    OTHER = "OTHER"
+
+
+class ResultClassification(StrEnum):
+    NORMAL = "NORMAL"
+    BORDERLINE = "BORDERLINE"
+    ABNORMAL = "ABNORMAL"
+    INADEQUATE = "INADEQUATE"
+
+
+class CaseStatus(StrEnum):
+    NEW_RESULT = "NEW_RESULT"
+    AWAITING_REVIEW = "AWAITING_REVIEW"
+    PATIENT_NOTIFICATION_PENDING = "PATIENT_NOTIFICATION_PENDING"
+    PATIENT_NOTIFIED = "PATIENT_NOTIFIED"
+    AWAITING_CONFIRMATION = "AWAITING_CONFIRMATION"
+    REFERRAL_PENDING = "REFERRAL_PENDING"
+    APPOINTMENT_PENDING = "APPOINTMENT_PENDING"
+    CONSULTATION_COMPLETED = "CONSULTATION_COMPLETED"
+    TREATMENT_OR_SURVEILLANCE = "TREATMENT_OR_SURVEILLANCE"
+    CLOSED = "CLOSED"
+
+
+class Priority(StrEnum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    URGENT = "URGENT"
+
+
+class ClosureReason(StrEnum):
+    RESOLVED = "RESOLVED"
+    LOST_TO_FOLLOWUP = "LOST_TO_FOLLOWUP"
+    TRANSFERRED = "TRANSFERRED"
+    NO_ACTION_REQUIRED = "NO_ACTION_REQUIRED"
+    DECEASED = "DECEASED"
+
+
+class ReferralStatus(StrEnum):
+    DRAFT = "DRAFT"
+    SENT = "SENT"
+    ACCEPTED = "ACCEPTED"
+    REJECTED = "REJECTED"
+    COMPLETED = "COMPLETED"
+    CANCELLED = "CANCELLED"
+
+
+class AppointmentStatus(StrEnum):
+    SCHEDULED = "SCHEDULED"
+    CONFIRMED = "CONFIRMED"
+    CHECKED_IN = "CHECKED_IN"
+    COMPLETED = "COMPLETED"
+    NO_SHOW = "NO_SHOW"
+    CANCELLED = "CANCELLED"
+    RESCHEDULED = "RESCHEDULED"
+
+
+class NotificationChannel(StrEnum):
+    SMS = "SMS"
+    EMAIL = "EMAIL"
+    PHONE = "PHONE"
+    PORTAL = "PORTAL"
+    LETTER = "LETTER"
+
+
+class NotificationStatus(StrEnum):
+    PENDING = "PENDING"
+    QUEUED = "QUEUED"  # V2: accepted, awaiting delivery via a configured provider
+    SENT = "SENT"
+    DELIVERED = "DELIVERED"
+    FAILED = "FAILED"
+    ACKNOWLEDGED = "ACKNOWLEDGED"
+
+
+class NotificationAudience(StrEnum):
+    PATIENT = "PATIENT"
+    STAFF = "STAFF"
+
+
+class CaseEventType(StrEnum):
+    STATUS_CHANGE = "STATUS_CHANGE"
+    NOTE = "NOTE"
+    PATIENT_CONTACT = "PATIENT_CONTACT"
+    NOTIFICATION_SENT = "NOTIFICATION_SENT"
+    ESCALATION = "ESCALATION"
+    REFERRAL_CREATED = "REFERRAL_CREATED"
+    APPOINTMENT_SCHEDULED = "APPOINTMENT_SCHEDULED"
+    APPOINTMENT_COMPLETED = "APPOINTMENT_COMPLETED"
+    CASE_CREATED = "CASE_CREATED"
+    CASE_CLOSED = "CASE_CLOSED"
+    ASSIGNMENT_CHANGE = "ASSIGNMENT_CHANGE"
+    RESULT_RECORDED = "RESULT_RECORDED"
+
+
+ACTIONABLE_CLASSIFICATIONS = {ResultClassification.ABNORMAL, ResultClassification.BORDERLINE}

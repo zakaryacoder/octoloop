@@ -1,0 +1,68 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: octoloop
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-octoloop_dev_change_me}
+      POSTGRES_DB: octoloop
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U octoloop -d octoloop"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    command: >
+      sh -c "cd /app && python scripts/init_db.py"
+    environment:
+      DATABASE_URL: postgresql+psycopg2://octoloop:${POSTGRES_PASSWORD:-octoloop_dev_change_me}@db:5432/octoloop
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production-use-a-long-random-string}
+      ENV: production
+      ALLOW_CORS_WILDCARD: "false"
+      CORS_ORIGINS: http://localhost:3000
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    environment:
+      DATABASE_URL: postgresql+psycopg2://octoloop:${POSTGRES_PASSWORD:-octoloop_dev_change_me}@db:5432/octoloop
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production-use-a-long-random-string}
+      ENV: production
+      ALLOW_CORS_WILDCARD: "false"
+      CORS_ORIGINS: http://localhost:3000
+      ENABLE_SCHEDULER: "true"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  pgdata:
